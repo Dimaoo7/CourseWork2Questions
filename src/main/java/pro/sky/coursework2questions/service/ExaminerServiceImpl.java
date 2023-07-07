@@ -22,8 +22,7 @@ public class ExaminerServiceImpl implements ExaminerService {
     }
 
     @Override
-    public List<String> getQuestions(int amount) {//Тест к тому чтоб при максимальном значении вопросов
-        // учитывалось что есть -1
+    public List<String> getQuestions(int amount) {
         if (amount <= 0 || amount > service.getAll().size() -1) {
             throw new BAD_REQUEST();
         }
