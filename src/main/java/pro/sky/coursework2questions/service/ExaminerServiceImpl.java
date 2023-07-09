@@ -1,36 +1,52 @@
 package pro.sky.coursework2questions.service;
 
 import org.springframework.stereotype.Service;
-import pro.sky.coursework2questions.exceptions.BAD_REQUEST;
+import pro.sky.coursework2questions.exceptions.AmountOutOfCollectionBoundException;
 import pro.sky.coursework2questions.interfaces.ExaminerService;
 import pro.sky.coursework2questions.interfaces.QuestionService;
-import pro.sky.coursework2questions.model.Question;
 
-import java.util.HashSet;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Service
 public class ExaminerServiceImpl implements ExaminerService {
 
-    QuestionService service;
+    private final List<String> questionsList = new ArrayList<>();
+    private final QuestionService questionService;
 
-    public ExaminerServiceImpl(QuestionService service) {
-        this.service = service;
+    public ExaminerServiceImpl(QuestionService questionService) {
+        this.questionService = questionService;
     }
 
     @Override
     public List<String> getQuestions(int amount) {
-        if (amount <= 0 || amount > service.getAll().size() -1) {
-            throw new BAD_REQUEST();
+        questionsList.clear();
+        validateQuantityQuestions(amount);
+        int originalQuestionsCounter = 1;
+        while (originalQuestionsCounter <= amount) {
+            String question = questionService.getRandomQuestion().getQuestion();
+            if (isQuestionUnique(question)) {
+                questionsList.add(question);
+                originalQuestionsCounter++;
+            }
         }
-        Set<Question> tmp = new HashSet<>( List.of( service.getRandomQuestion()));
-        while (tmp.size() < amount) {
-            tmp.add(service.getRandomQuestion());
-        }
-        return tmp.stream().map(Question::getQuestion).collect(Collectors.toList());
+        return questionsList;
+    }
 
+    private boolean isQuestionUnique(String question) {
+        for (String element : questionsList) {
+            if (element.equals(question)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void validateQuantityQuestions(int amount) {
+        if (amount < questionService.getAll().size() || amount > 0) {
+            throw new AmountOutOfCollectionBoundException();
+        }
     }
 }

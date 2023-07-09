@@ -5,12 +5,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pro.sky.coursework2questions.interfaces.QuestionService;
-import pro.sky.coursework2questions.model.Question;
 
-import java.util.Collection;
 
 @RestController
-@RequestMapping("/exam")
+@RequestMapping("/exam/java")
 public class JavaController {
 
     private final QuestionService service;
@@ -37,8 +35,8 @@ public class JavaController {
                 answer + "\n";
     }
 
-    @GetMapping("java")
-    public Collection<Question> getAllQuestions() {
-        return service.getAll();
+    @GetMapping("/")
+    public String getAllQuestions() {
+        return service.getAll().toString();
     }
 }

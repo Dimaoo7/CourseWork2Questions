@@ -24,6 +24,9 @@ public class JavaQuestionService implements QuestionService {
 
     @Override
     public Question getRandomQuestion() {
+        if (questions.isEmpty()) {
+            return null;
+        }
         int size = questions.size();
         int item = new Random().nextInt(size);
         int i = 0;
@@ -35,27 +38,29 @@ public class JavaQuestionService implements QuestionService {
             i++;
         }
         return rez;
+
     }
 
-        @Override
-    public Question add(String question, String answer) {
-        Question question1 = new Question(question, answer);
-        questions.add(question1);
-        return question1;
+    @Override
+    public void add(String question, String answer) {
+        questions.add(new Question(question, answer));
+        System.out.println("объект Question добавлен\n" +
+                question + "\n" +
+                answer + "\n");
     }
 
     @Override
     public void remove(String question, String answer) {
         Question questionNeedRemove = new Question(question, answer);
         questions.remove(questionNeedRemove);
-        System.out.println("Вопрос удален\n" +
+        System.out.println("объект Question удален\n" +
                 question + "\n" +
                 answer + "\n");
     }
 
     @Override
-    public Collection<Question> getAll() {
-        for (Question question : questions) {
+    public Set<Question> getAll() {
+        for(Question question: questions){
             System.out.println(question);
         }
         return questions;
