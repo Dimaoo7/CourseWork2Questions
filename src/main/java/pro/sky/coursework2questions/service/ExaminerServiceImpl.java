@@ -24,8 +24,13 @@ public class ExaminerServiceImpl implements ExaminerService {
     public List<String> getQuestions(int amount) {
         List<String> questionsList = new ArrayList<>();
         validateQuantityQuestions(amount);
-        if (questionsList.toString().contains(questionService.getRandomQuestion().getQuestion())) {
-            questionsList.add(questionService.getRandomQuestion().getQuestion());
+        int originalQuestionsCounter = 1;
+        while (originalQuestionsCounter <= amount) {
+            String question = questionService.getRandomQuestion().getQuestion();
+            if (questionsList.toString().contains(question)) {
+                questionsList.add(question);
+                originalQuestionsCounter++;
+            }
         }
         return questionsList;
     }
